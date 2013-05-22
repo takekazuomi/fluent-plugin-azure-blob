@@ -6,4 +6,4 @@ gemspec
 
 
 gem 'azure', :git => 'git@github.com:takekazuomi/azure-sdk-for-ruby.git'
-gem 'azure_blob_extentions', :git => 'git@github.com:takekazuomi/azure_blob_extentions.git'
+gem 'azure_blob_extentions', :git => 'git@github.com:takekazuomi/ruby-sdk-blob-extentions.git'

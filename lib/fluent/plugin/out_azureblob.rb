@@ -8,11 +8,13 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
   def initialize
     super
     require 'azure'
+    require 'azure_blob_extentions'
     require 'pathname'
     require 'zlib'
     require 'time'
     require 'tempfile'
   end
+
 
   config_param :path, :string, :default => ""
   config_param :time_format, :string, :default => nil
@@ -105,7 +107,7 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
         values_for_blob_object_key[expr[2...expr.size-1]]
       }
       i += 1
-    end while blob_object_exists(blobpath)
+    end while @azure_blob_service.blob_exists?(blobpath)
 
     tmp = Tempfile.new("azuleblob-")
     begin
@@ -119,9 +121,11 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
       end
 
       $log.debug "tmp.path #{tmp.path}"
-      # TODO mime_type, close file, memory issue
-      content = File.open(Pathname.new(tmp.path), 'rb') { |file| file.read }
-      @azure_blob_service.create_block_blob(@container.name, blobpath, content)
+      
+      p tmp.path.to_s
+      p Pathname.new(tmp.path).to_s
+
+      @azure_blob_service.parallel_upload(@container.name, blobpath, Pathname.new(tmp.path).to_s)
     ensure
       tmp.close(true) rescue nil
       w.close rescue nil

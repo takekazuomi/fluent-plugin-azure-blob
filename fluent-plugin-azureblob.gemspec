@@ -17,10 +17,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "fluentd", "~> 0.10.0"
-  gem.add_runtime_dependency "yajl-ruby", "~> 1.0"
-  gem.add_runtime_dependency "azure"
-  gem.add_runtime_dependency "azure_blob_extentions"
+  spec.add_runtime_dependency "fluentd", "~> 0.10.0"
+  spec.add_runtime_dependency "yajl-ruby", "~> 1.0"
+  spec.add_runtime_dependency "azure"
+  spec.add_runtime_dependency "azure_blob_extentions"
+  spec.add_runtime_dependency "fluent-mixin-config-placeholders", "~> 0.2.0"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
