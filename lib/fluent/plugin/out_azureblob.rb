@@ -107,7 +107,7 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
         values_for_blob_object_key[expr[2...expr.size-1]]
       }
       i += 1
-    end while @azure_blob_service.blob_exists?(blobpath)
+    end while @azure_blob_service.blob_exists?(@container.name, blobpath)
 
     tmp = Tempfile.new("azuleblob-")
     begin
@@ -120,12 +120,9 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
         tmp.close
       end
 
-      $log.debug "tmp.path #{tmp.path}"
+      $log.debug "tmp.path #{Pathname.new(tmp.path).to_s} -> #{"%s/%s" % [@container.name, blobpath]}"
       
-      p tmp.path.to_s
-      p Pathname.new(tmp.path).to_s
-
-      @azure_blob_service.parallel_upload(@container.name, blobpath, Pathname.new(tmp.path).to_s)
+      @azure_blob_service.parallel_upload @container.name, Pathname.new(tmp.path).to_s, blobpath, :in_threads => 2
     ensure
       tmp.close(true) rescue nil
       w.close rescue nil
