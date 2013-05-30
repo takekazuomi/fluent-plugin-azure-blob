@@ -137,7 +137,7 @@ class AzureBlobOutput < Fluent::TimeSlicedOutput
     @container = @azure_blob_service.get_container_properties(@blob_container)
   rescue Azure::Core::Http::HTTPError
     # 404
-    if @auto_create_bucket
+    if @auto_create_container
       $log.debug "Creating container #{@blob_container}"
       begin
         @container = @azure_blob_service.create_container(@blob_container)
